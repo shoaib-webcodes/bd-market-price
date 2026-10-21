@@ -19,7 +19,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${notoSerifBengali.className} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="mx-auto  h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* All pages will be included in children. Header or other component will be above the children and Footer will be below the children */}
         <Header></Header>
         {children}
