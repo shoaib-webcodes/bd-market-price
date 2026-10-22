@@ -32,7 +32,7 @@ const Header = () => {
                     </div>
 
                     <div className="flex flex-col space-y-2">
-                        <span className="text-2xl font-bold leading-5 text-gray-900">
+                        <span className="text-md md:text-2xl font-bold leading-5 text-gray-900">
                             বাজার দর
                         </span>
                         <span className="text-xl leading-3 text-gray-500">
@@ -52,14 +52,14 @@ const Header = () => {
 
                 <nav className="flex items-center gap-4 sm:gap-6">
                     <Link
-                        href="/login"
+                        href="/sign-in"
                         className="text-xs font-medium text-gray-700 hover:text-emerald-600 sm:text-sm"
                     >
                         সাইন ইন
                     </Link>
 
                     <Link
-                        href="/register"
+                        href="/sign-up"
                         className="rounded-md bg-emerald-600 px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-emerald-700 sm:px-4 sm:text-sm"
                     >
                         সাইন আপ
