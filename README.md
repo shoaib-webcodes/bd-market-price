@@ -1,10 +1,10 @@
-# 💪 B14-A7-Bazar Dor
+# 💪 BD Market Price
 
 ---
 
-## 📅 Deadline For 60 marks: 10 October | ⏱️11:59PM
-## 📅 Deadline For 50 marks: 11 October | ⏱️11:59PM
-## 📅 Deadline for 30 marks: Any time after 11 October 2026
+## 📅 Live Link:
+https://bd-market-price.vercel.app/ 
+
 
 ---
 # API's
