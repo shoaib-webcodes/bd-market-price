@@ -19,7 +19,7 @@ async function CurrentDate() {
 
 const Header = () => {
     return (
-        <header className="w-full border-b border-gray-200 bg-white">
+        <header className="w-full border-b border-gray-200 bg-white pt-5 pb-2">
             <div className="mx-auto flex h-14 max-w-7xl items-center justify-between ">
                 <Link href="/" className="flex items-center gap-2.5">
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-white text-[5px] p-2">
@@ -32,10 +32,10 @@ const Header = () => {
                     </div>
 
                     <div className="flex flex-col space-y-2">
-                        <span className="text-md md:text-2xl font-bold leading-5 text-gray-900">
+                        <span className="text-xl md:text-2xl font-bold leading-5 text-gray-900">
                             বাজার দর
                         </span>
-                        <span className="text-xl leading-3 text-gray-500">
+                        <span className="text-md md:text-xl leading-3 text-gray-500">
                             {/* 2. Wrap the dynamic component in Suspense */}
                             <Suspense
                                 fallback={
