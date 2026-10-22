@@ -2,6 +2,8 @@ import Link from "next/link";
 import { connection } from "next/server";
 import { Suspense } from "react";
 import Navlinks from "./Navlinks";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSeedling } from "@fortawesome/free-solid-svg-icons";
 
 // 1. Create a small async component that performs the dynamic work
 async function CurrentDate() {
@@ -20,8 +22,13 @@ const Header = () => {
         <header className="w-full border-b border-gray-200 bg-white">
             <div className="mx-auto flex h-14 max-w-7xl items-center justify-between ">
                 <Link href="/" className="flex items-center gap-2.5">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-white">
-                        <span className="text-lg font-bold"></span>
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-white text-[5px] p-2">
+                        
+                            <FontAwesomeIcon
+                                icon={faSeedling}
+                            
+                            />
+                
                     </div>
 
                     <div className="flex flex-col space-y-2">
@@ -59,7 +66,7 @@ const Header = () => {
                     </Link>
                 </nav>
             </div>
-            
+
             {/* Navlinks */}
             <Suspense fallback={<p>Loading</p>}>
                 <Navlinks></Navlinks>

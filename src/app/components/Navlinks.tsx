@@ -12,7 +12,7 @@ const Navlinks = async () => {
     const data: NavI[] = await res.json();
 
     return (
-        <div className="h-15 flex justify-start items-center gap-5">
+        <div className="h-15 flex justify-start items-center gap-2 md:gap-8 text-md md:text-lg">
 
             {
                 data.map((n, index: number) => (
