@@ -1,10 +1,15 @@
+import { Suspense } from "react";
+import Marquee from "./components/Marquee";
 
 
 export default function Home() {
   return (
     <div>
-      দৈনন্দিন জীবন, বিশ্রাম এবং ঘুমের সময় নাক দিয়ে শ্বাস নেওয়াই সবচেয়ে স্বাস্থ্যকর। যদি আপনি প্রায়ই নাক দিয়ে শ্বাস নিতে না পারেন বা সবসময় মুখ দিয়ে শ্বাস নিতে হয়, তাহলে কারণ নির্ণয়ের জন্য একজন নাক-কান-গলা (ENT) বিশেষজ্ঞের পরামর্শ নেওয়া উচিত।
-     
+      {/* Marquee component */}
+      <Suspense fallback={<span className="loading loading-spinner text-primary"></span>}>
+        <Marquee></Marquee>
+      </Suspense>
+
     </div>
   );
 }
