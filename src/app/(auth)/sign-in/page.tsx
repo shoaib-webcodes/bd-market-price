@@ -19,7 +19,7 @@ export default function SignInPage() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#f1f6f1] px-4 py-10">
-      <div className="w-full max-w-[400px]">
+      <div className="w-full max-w-100">
         {/* Heading */}
         <header className="mb-6 text-center">
           <h1 className="text-2xl font-bold tracking-tight text-[#202820]">

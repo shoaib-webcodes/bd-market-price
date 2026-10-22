@@ -33,7 +33,7 @@ export default function SignUpPage() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#f1f6f1] px-4 py-10">
-      <div className="w-full max-w-[380px]">
+      <div className="w-full max-w-100">
         {/* Heading */}
         <div className="mb-5 text-center">
           <h1 className="text-2xl font-bold tracking-tight text-[#202820]">
