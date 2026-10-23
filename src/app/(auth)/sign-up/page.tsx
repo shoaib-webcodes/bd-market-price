@@ -46,7 +46,7 @@ export default function SignUpPage() {
 
       if (data) {
         console.log("সাইন আপ সফল হয়েছে:", data);
-        redirect("/")
+        
         
       }
 
@@ -55,7 +55,7 @@ export default function SignUpPage() {
       }
     } catch (err: unknown) {
       setError("একটি অপ্রত্যাশিত ত্রুটি ঘটেছে।");
-      console.log(err);
+      
     } finally {
       setLoading(false);
     }
