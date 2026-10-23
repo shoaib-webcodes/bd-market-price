@@ -1,22 +1,28 @@
-
-
-
 "use client";
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
+import { authClient } from "../../../lib/auth-client";
 
 export default function SignUpPage() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSignUp = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
 
+    const formData = new FormData(e.currentTarget);
+    const userData = Object.fromEntries(formData.entries());
+    
+    const { name, email, password, confirmPassword } = userData as {
+      name: string;
+      email: string;
+      password: string;
+      confirmPassword: string;
+    };
+
+    // Password Validation
     if (password.length < 8) {
       setError("পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে।");
       return;
@@ -27,8 +33,29 @@ export default function SignUpPage() {
       return;
     }
 
-    // Connect your signup API here.
-    console.log({ name, email, password });
+    try {
+      setLoading(true);
+      
+      // Better Auth Client Call
+      const { data, error: authError } = await authClient.signUp.email({
+        email,
+        password,
+        name,
+      });
+
+      if (data) {
+        console.log("সাইন আপ সফল হয়েছে:", data);
+        
+      }
+
+      if (authError) {
+        setError(authError.message || "সাইন আপ করতে সমস্যা হয়েছে।");
+      }
+    } catch (err: any) {
+      setError("একটি অপ্রত্যাশিত ত্রুটি ঘটেছে।");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -39,7 +66,6 @@ export default function SignUpPage() {
           <h1 className="text-2xl font-bold tracking-tight text-[#202820]">
             অ্যাকাউন্ট তৈরি করুন
           </h1>
-
           <p className="mt-2 text-xs text-gray-600">
             বিনামূল্যে সাইন আপ করে সব ফিচার ব্যবহার করুন
           </p>
@@ -47,7 +73,7 @@ export default function SignUpPage() {
 
         {/* Signup Card */}
         <div className="rounded-xl border border-gray-200/80 bg-white/80 p-5 shadow-sm sm:p-6">
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSignUp} className="space-y-4">
             {/* Name */}
             <div>
               <label
@@ -56,13 +82,11 @@ export default function SignUpPage() {
               >
                 নাম
               </label>
-
               <input
                 id="name"
+                name="name"
                 type="text"
                 placeholder="যেমন: রহিম উদ্দিন"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
                 autoComplete="name"
                 required
                 className="w-full rounded-md border border-[#e1e9e1] bg-transparent px-3 py-2 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-green-600 focus:ring-2 focus:ring-green-100"
@@ -77,13 +101,11 @@ export default function SignUpPage() {
               >
                 ইমেইল
               </label>
-
               <input
                 id="email"
+                name="email"
                 type="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Type your email address"
                 autoComplete="email"
                 required
                 className="w-full rounded-md border border-[#e1e9e1] bg-transparent px-3 py-2 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-green-600 focus:ring-2 focus:ring-green-100"
@@ -98,13 +120,11 @@ export default function SignUpPage() {
               >
                 পাসওয়ার্ড
               </label>
-
               <input
                 id="password"
+                name="password"
                 type="password"
                 placeholder="কমপক্ষে ৮ অক্ষর"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
                 autoComplete="new-password"
                 minLength={8}
                 required
@@ -120,13 +140,11 @@ export default function SignUpPage() {
               >
                 পাসওয়ার্ড নিশ্চিত করুন
               </label>
-
               <input
                 id="confirmPassword"
+                name="confirmPassword"
                 type="password"
                 placeholder="আবার লিখুন"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
                 autoComplete="new-password"
                 required
                 className="w-full rounded-md border border-[#e1e9e1] bg-transparent px-3 py-2 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-green-600 focus:ring-2 focus:ring-green-100"
@@ -143,17 +161,18 @@ export default function SignUpPage() {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full rounded-md bg-[#078b42] px-4 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-[#067536] focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 active:scale-[0.99]"
+              disabled={loading}
+              className="w-full rounded-md bg-[#078b42] px-4 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-[#067536] focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 active:scale-[0.99] disabled:opacity-50"
             >
-              অ্যাকাউন্ট তৈরি করুন
+              {loading ? "অ্যাকাউন্ট তৈরি হচ্ছে..." : "অ্যাকাউন্ট তৈরি করুন"}
             </button>
           </form>
 
           {/* Divider */}
           <div className="my-4 flex items-center gap-3">
-            <div className="h-px flex-1 bg-gray-400" />
+            <div className="h-px flex-1 bg-gray-300" />
             <span className="text-xs text-gray-600">অথবা</span>
-            <div className="h-px flex-1 bg-gray-400" />
+            <div className="h-px flex-1 bg-gray-300" />
           </div>
 
           {/* Social Login Buttons */}
@@ -163,7 +182,7 @@ export default function SignUpPage() {
               onClick={() => setError("Google OAuth এখনো সংযুক্ত করা হয়নি।")}
               className="flex items-center justify-center gap-1.5 rounded-md border border-gray-200 px-2 py-2 text-xs font-medium text-gray-700 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-200"
             >
-              <span className="font-bold text-base text-[#4285F4]">G</span>
+              <span className="text-base font-bold text-[#4285F4]">G</span>
               Google দিয়ে চালিয়ে যান
             </button>
 
