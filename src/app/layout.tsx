@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import { Noto_Serif_Bengali } from "next/font/google";
+import { Hind_Siliguri } from "next/font/google";
 import "./globals.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 
-const notoSerifBengali = Noto_Serif_Bengali({
-  subsets: ["latin", "bengali"],
+const hindSiliguri = Hind_Siliguri({
+  subsets: ["bengali", "latin"],
+  weight: ["300", "400", "500", "600", "700"],
 });
-
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,7 +18,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${notoSerifBengali.className} h-full antialiased`}
+      className={`${hindSiliguri.className} h-full antialiased`}
     >
       <body className="mx-auto  h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* All pages will be included in children. Header or other component will be above the children and Footer will be below the children */}

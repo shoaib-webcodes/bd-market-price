@@ -3,7 +3,7 @@
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { authClient } from "../../../lib/auth-client";
-import { redirect } from "next/navigation";
+
 
 export default function SignUpPage() {
   const [error, setError] = useState("");

@@ -23,7 +23,7 @@ const Marquee = async () => {
   const data: MarqueeI[] = await res.json();
 
   return (
-    <div className="flex items-center overflow-hidden bg-green-50">
+    <div className="flex items-center overflow-hidden bg-green-200 text-black">
       {/* Fixed Label */}
       <div className="z-10 flex shrink-0 items-center bg-green-500 px-3 py-3 text-xl text-white">
         <span>বাজার দর</span>

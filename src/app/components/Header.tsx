@@ -18,7 +18,7 @@ async function CurrentDate() {
 
 const Header = () => {
     return (
-        <header className="w-full border-b border-gray-200 bg-white pt-5 pb-2">
+        <header className="w-full border-b border-gray-200 bg-white pt-5 ">
             <div className="mx-auto flex h-14 max-w-7xl items-center justify-between ">
                 <Link href="/" className="flex items-center gap-2.5">
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-white text-3xl p-1.5">
