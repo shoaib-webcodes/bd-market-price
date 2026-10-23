@@ -1,6 +1,6 @@
 import MarqueeContent from "./MarqueeContent";
 
-interface MI {
+interface MarqueeI {
   nameBn: string;
   slug: string;
   categoryIcon: string;
@@ -20,7 +20,7 @@ const Marquee = async () => {
     throw new Error("Failed to fetch bazar prices");
   }
 
-  const data: MI[] = await res.json();
+  const data: MarqueeI[] = await res.json();
 
   return (
     <div className="flex items-center overflow-hidden bg-green-50">
