@@ -1,74 +1,40 @@
-import Link from "next/link";
-import { FaArrowUp, FaArrowDown } from "react-icons/fa";
-import MarqueeText from "react-marquee-text"
-import "react-marquee-text/dist/styles.css"
-
-
+import MarqueeContent from "./MarqueeContent";
 
 interface MI {
-    nameBn: string,
-    slug: string,
-    categoryIcon: string,
-    today: number,
-    change: {
-        dir: string,
-        pct: number
-    }
-
+  nameBn: string;
+  slug: string;
+  categoryIcon: string;
+  today: number;
+  change: {
+    dir: string;
+    pct: number;
+  };
 }
 
-
-
 const Marquee = async () => {
+  const res = await fetch(
+    "https://api.abcz.workers.dev/api/bazardor/products"
+  );
 
-    const res = await fetch("https://api.abcz.workers.dev/api/bazardor/products")
-    const data: MI[] = await res.json();
+  if (!res.ok) {
+    throw new Error("Failed to fetch bazar prices");
+  }
 
-    return (
-        <div className="flex items-center bg-green-50 overflow-hidden ">
-           <div className="bg-green-500 py-3 px-3 text-white flex text-xl">
-           <span> লাইভ</span>    &nbsp; <span>বাজার </span>    &nbsp; <span>দর</span>
+  const data: MI[] = await res.json();
 
-           </div>
-           <div className="bg-green-50 py-3 ">
-             <MarqueeText
-                duration={120}
-                pauseOnHover={true}
-                textSpacing="2.5rem"
-                direction="right"
-              
-            >
-                {
-                    data.map((n, index: number) => (
-                        <Link key={index} href={n.slug} >
-                            {n.categoryIcon} &nbsp;
-                            {n.nameBn}
-                            &nbsp;
-                            |
-                            &nbsp;
-                            {n.today}&nbsp; টাকা / কেজি &nbsp;
-                            {(n.change.dir) === 'up' ?
+  return (
+    <div className="flex items-center overflow-hidden bg-green-50">
+      {/* Fixed Label */}
+      <div className="z-10 flex shrink-0 items-center bg-green-500 px-3 py-3 text-xl text-white">
+        <span>বাজার দর</span>
+      </div>
 
-                                <FaArrowUp className="inline-block text-red-600" />
-
-
-
-                                :
-                                <FaArrowDown className="inline-block text-green-600" />
-                            }
-                            &nbsp;
-                            {n.change.pct}
-
-
-
-                        </Link>
-                    ))
-                }
-            </MarqueeText>
-
-           </div>
-        </div>
-    );
+      {/* Animated Content */}
+      <div className="min-w-0 flex-1 overflow-hidden py-3">
+        <MarqueeContent data={data} />
+      </div>
+    </div>
+  );
 };
 
 export default Marquee;
