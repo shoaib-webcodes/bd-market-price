@@ -53,8 +53,9 @@ export default function SignUpPage() {
       if (authError) {
         setError(authError.message || "সাইন আপ করতে সমস্যা হয়েছে।");
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError("একটি অপ্রত্যাশিত ত্রুটি ঘটেছে।");
+      console.log(err);
     } finally {
       setLoading(false);
     }
