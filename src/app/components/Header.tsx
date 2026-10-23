@@ -2,8 +2,7 @@ import Link from "next/link";
 import { connection } from "next/server";
 import { Suspense } from "react";
 import Navlinks from "./Navlinks";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSeedling } from "@fortawesome/free-solid-svg-icons";
+import { SiCardmarket } from "react-icons/si";
 
 // 1. Create a small async component that performs the dynamic work
 async function CurrentDate() {
@@ -22,12 +21,9 @@ const Header = () => {
         <header className="w-full border-b border-gray-200 bg-white pt-5 pb-2">
             <div className="mx-auto flex h-14 max-w-7xl items-center justify-between ">
                 <Link href="/" className="flex items-center gap-2.5">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-white text-[5px] p-2">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-white text-3xl p-1.5">
                         
-                            <FontAwesomeIcon
-                                icon={faSeedling}
-                            
-                            />
+                            <SiCardmarket />
                 
                     </div>
 
