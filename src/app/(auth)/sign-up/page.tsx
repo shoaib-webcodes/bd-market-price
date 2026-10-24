@@ -3,18 +3,20 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { authClient } from "../../../lib/auth-client";
 import toast from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";
 
 export default function SignUpPage() {
+  const router = useRouter();
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSignUp = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Keep the form reference before the async operation
     const form = e.currentTarget;
 
     setError("");
@@ -29,69 +31,89 @@ export default function SignUpPage() {
       confirmPassword: string;
     };
 
-    // Password validation
+    // Validate password length
     if (password.length < 8) {
-      setError("পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে।");
+      const message = "পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে।";
+      setError(message);
+      toast.error(message);
       return;
     }
 
+    // Validate password confirmation
     if (password !== confirmPassword) {
-      setError("দুটি পাসওয়ার্ড মিলছে না।");
+      const message = "দুটি পাসওয়ার্ড মিলছে না।";
+      setError(message);
+      toast.error(message);
       return;
     }
 
     try {
       setLoading(true);
 
-      // Better Auth signup
       const { data, error: authError } =
         await authClient.signUp.email({
+          name,
           email,
           password,
-          name,
+          callbackURL: "/",
         });
 
       if (authError) {
-        setError(
-          authError.message || "সাইন আপ করতে সমস্যা হয়েছে।"
-        );
-        toast.error(
-          authError.message || "সাইন আপ করতে সমস্যা হয়েছে।"
-        );
+        const message =
+          authError.message || "সাইন আপ করতে সমস্যা হয়েছে।";
+
+        setError(message);
+        toast.error(message);
         return;
       }
 
       if (data) {
-       
-        // Clear all form fields after successful signup
+        // Clear the form
         form.reset();
 
-        // Clear any previous error
+        // Clear previous error
         setError("");
 
         // Show success notification
-        toast.success("User created successfully!");
+        toast.success("অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে!");
+
+        // Redirect to the homepage
+        router.replace("/");
+        router.refresh();
       }
     } catch (err: unknown) {
       console.error("Signup error:", err);
 
-      setError("একটি অপ্রত্যাশিত ত্রুটি ঘটেছে।");
-      toast.error("একটি অপ্রত্যাশিত ত্রুটি ঘটেছে।");
+      const message = "একটি অপ্রত্যাশিত ত্রুটি ঘটেছে।";
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
   };
+// Google Sign In
+  const handleGoogleSignIn = async () => {
+    const data = await authClient.signIn.social({
+      provider: "google",
+    });
+  
+  }
+
+  const handleGitHubSignUp = () => {
+    const message = "GitHub OAuth এখনো সংযুক্ত করা হয়নি।";
+    setError(message);
+    toast.error(message);
+  };
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#f1f6f1] px-4 py-10">
-      
-
-      <div className="w-full max-w-100">
+      <div className="w-full max-w-[25rem]">
         {/* Heading */}
         <div className="mb-5 text-center">
           <h1 className="text-2xl font-bold tracking-tight text-[#202820]">
             অ্যাকাউন্ট তৈরি করুন
           </h1>
+
           <p className="mt-2 text-xs text-gray-600">
             বিনামূল্যে সাইন আপ করে সব ফিচার ব্যবহার করুন
           </p>
@@ -108,14 +130,16 @@ export default function SignUpPage() {
               >
                 নাম
               </label>
+
               <input
                 id="name"
                 name="name"
                 type="text"
-                placeholder="আপনার নাম লিখুন "
+                placeholder="আপনার নাম লিখুন"
                 autoComplete="name"
                 required
-                className="w-full rounded-md border border-[#e1e9e1] bg-transparent px-3 py-2 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-green-600 focus:ring-2 focus:ring-green-100"
+                disabled={loading}
+                className="w-full rounded-md border border-[#e1e9e1] bg-transparent px-3 py-2 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-green-600 focus:ring-2 focus:ring-green-100 disabled:opacity-60"
               />
             </div>
 
@@ -127,14 +151,16 @@ export default function SignUpPage() {
               >
                 ইমেইল
               </label>
+
               <input
                 id="email"
                 name="email"
                 type="email"
-                placeholder="আপনার ইমেইল অ্যাড্রেস লিখুন "
+                placeholder="আপনার ইমেইল অ্যাড্রেস লিখুন"
                 autoComplete="email"
                 required
-                className="w-full rounded-md border border-[#e1e9e1] bg-transparent px-3 py-2 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-green-600 focus:ring-2 focus:ring-green-100"
+                disabled={loading}
+                className="w-full rounded-md border border-[#e1e9e1] bg-transparent px-3 py-2 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-green-600 focus:ring-2 focus:ring-green-100 disabled:opacity-60"
               />
             </div>
 
@@ -146,6 +172,7 @@ export default function SignUpPage() {
               >
                 পাসওয়ার্ড
               </label>
+
               <input
                 id="password"
                 name="password"
@@ -154,7 +181,8 @@ export default function SignUpPage() {
                 autoComplete="new-password"
                 minLength={8}
                 required
-                className="w-full rounded-md border border-[#e1e9e1] bg-transparent px-3 py-2 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-green-600 focus:ring-2 focus:ring-green-100"
+                disabled={loading}
+                className="w-full rounded-md border border-[#e1e9e1] bg-transparent px-3 py-2 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-green-600 focus:ring-2 focus:ring-green-100 disabled:opacity-60"
               />
             </div>
 
@@ -166,6 +194,7 @@ export default function SignUpPage() {
               >
                 পাসওয়ার্ড নিশ্চিত করুন
               </label>
+
               <input
                 id="confirmPassword"
                 name="confirmPassword"
@@ -173,7 +202,8 @@ export default function SignUpPage() {
                 placeholder="আবার লিখুন"
                 autoComplete="new-password"
                 required
-                className="w-full rounded-md border border-[#e1e9e1] bg-transparent px-3 py-2 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-green-600 focus:ring-2 focus:ring-green-100"
+                disabled={loading}
+                className="w-full rounded-md border border-[#e1e9e1] bg-transparent px-3 py-2 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-green-600 focus:ring-2 focus:ring-green-100 disabled:opacity-60"
               />
             </div>
 
@@ -207,33 +237,28 @@ export default function SignUpPage() {
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
-              onClick={() => {
-                setError("Google OAuth এখনো সংযুক্ত করা হয়নি।");
-                toast.error("Google OAuth এখনো সংযুক্ত করা হয়নি।");
-              }}
-              className="flex items-center justify-center gap-1.5 rounded-md border border-gray-200 px-2 py-2 text-xs font-medium text-gray-700 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-200"
+              onClick={handleGoogleSignIn}
+              disabled={loading}
+              className="flex items-center justify-center gap-1.5 rounded-md border border-gray-200 px-2 py-2 text-xs font-medium text-gray-700 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-200 disabled:opacity-50"
             >
-              <span className="text-base font-bold text-[#4285F4]">
-                <FcGoogle />
-              </span>
+              <FcGoogle className="h-4 w-4 shrink-0" />
               Google দিয়ে চালিয়ে যান
             </button>
 
             <button
               type="button"
-              onClick={() => {
-                setError("GitHub OAuth এখনো সংযুক্ত করা হয়নি।");
-                toast.error("GitHub OAuth এখনো সংযুক্ত করা হয়নি।");
-              }}
-              className="flex items-center justify-center gap-1.5 rounded-md border border-gray-200 px-2 py-2 text-xs font-medium text-gray-700 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-200"
+              onClick={handleGitHubSignUp}
+              disabled={loading}
+              className="flex items-center justify-center gap-1.5 rounded-md border border-gray-200 px-2 py-2 text-xs font-medium text-gray-700 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-200 disabled:opacity-50"
             >
               <svg
                 viewBox="0 0 24 24"
                 aria-hidden="true"
-                className="h-4 w-4 fill-current"
+                className="h-4 w-4 shrink-0 fill-current"
               >
                 <path d="M12 .9a11.1 11.1 0 0 0-3.51 21.63c.56.1.76-.24.76-.54v-2.1c-3.1.68-3.76-1.32-3.76-1.32-.5-1.3-1.24-1.64-1.24-1.64-1.02-.7.08-.69.08-.69 1.13.08 1.73 1.16 1.73 1.16 1 1.72 2.62 1.22 3.26.93.1-.72.39-1.22.71-1.5-2.48-.28-5.1-1.24-5.1-5.52 0-1.22.44-2.22 1.16-3-.12-.28-.5-1.42.11-2.96 0 0 .95-.3 3.05 1.15a10.6 10.6 0 0 1 5.55 0c2.1-1.45 3.05-1.15 3.05-1.15.61 1.54.23 2.68.11 2.96.72.78 1.16 1.78 1.16 3 0 4.3-2.62 5.23-5.12 5.5.4.35.76 1.03.76 2.08v3.1c0 .3.2.65.77.54A11.1 11.1 0 0 0 12 .9Z" />
               </svg>
+
               GitHub দিয়ে চালিয়ে যান
             </button>
           </div>

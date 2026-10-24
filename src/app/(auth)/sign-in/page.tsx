@@ -10,72 +10,48 @@ export default function SignInPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSignIn = async (e: FormEvent<HTMLFormElement>) => {
+
+
+
+  const handleSignIn = async (e: React.SubmitEvent<HTMLElement>) => {
     e.preventDefault();
+    // Keep the form reference before the async operation
+    const form = e.currentTarget;
+    const formData = new FormData(e.target);
+    const user = Object.fromEntries(formData.entries()) as { email: string, password: string }
 
-    setError("");
-    setIsLoading(true);
+    const { data, error } = await authClient.signIn.email({
+      ...user,
+      callbackURL: "/"
 
-    try {
-      const { data, error } = await authClient.signIn.email({
-        email,
-        password,
-        callbackURL: "/",
-      });
+    })
 
-      if (error) {
-        const message =
-          error.message || "ইমেইল অথবা পাসওয়ার্ড সঠিক নয়।";
+    if (data) {
 
-        setError(message);
-        toast.error(message);
-        return;
-      }
-
-      if (data) {
-        setEmail("");
-        setPassword("");
-        toast.success("সফলভাবে সাইন ইন হয়েছে!");
-      }
-    } catch {
-      setError("কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।");
-      toast.error("কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।");
-    } finally {
-      setIsLoading(false);
+      toast.success("Log in successfully");
+      // Clear all form fields after successful signup
     }
+
+    if (error) {
+      toast.error("Some Wrong happened");
+    }
+
+
+    // Connect your authentication API here.
+    console.log({ email, password });
   };
 
-  const handleSocialSignIn = async (
-    provider: "google" | "github"
-  ) => {
-    setError("");
-    setIsLoading(true);
-
-    try {
-      const { error } = await authClient.signIn.social({
-        provider,
-        callbackURL: "/",
-      });
-
-      if (error) {
-        const message =
-          error.message || "সাইন ইন করা যায়নি। আবার চেষ্টা করুন।";
-
-        setError(message);
-        toast.error(message);
-        setIsLoading(false);
-      }
-    } catch {
-      setError("কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।");
-      toast.error("কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।");
-      setIsLoading(false);
-    }
-  };
+  // Google Sign In
+  const handleGoogleSignIn = async () => {
+    const data = await authClient.signIn.social({
+      provider: "google",
+    });
+  
+  }
 
   return (
-    <main className="flex min-h-screen justify-center bg-[#f1f6f1] px-4 py-10">
+    <main className="flex min-h-screen  justify-center bg-[#f1f6f1] px-4 py-10">
       <div className="w-full max-w-100">
         {/* Heading */}
         <header className="mb-6 text-center">
@@ -104,13 +80,12 @@ export default function SignInPage() {
                 id="email"
                 type="email"
                 name="email"
-                autoComplete="email"
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+
                 required
-                disabled={isLoading}
-                className="w-full rounded-lg border border-[#dfe8df] bg-transparent px-3 py-2.5 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-green-600 focus:ring-2 focus:ring-green-100 disabled:opacity-60"
+                className="w-full rounded-lg border border-[#dfe8df] bg-transparent px-3 py-2.5 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-green-600 focus:ring-2 focus:ring-green-100"
               />
             </div>
 
@@ -127,22 +102,18 @@ export default function SignInPage() {
                 id="password"
                 type="password"
                 name="password"
-                autoComplete="current-password"
-                placeholder="আপনার পাসওয়ার্ড লিখুন"
+                placeholder="কমপক্ষে ৮ অক্ষর"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+
                 required
-                disabled={isLoading}
-                className="w-full rounded-lg border border-[#dfe8df] bg-transparent px-3 py-2.5 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-green-600 focus:ring-2 focus:ring-green-100 disabled:opacity-60"
+                className="w-full rounded-lg border border-[#dfe8df] bg-transparent px-3 py-2.5 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-green-600 focus:ring-2 focus:ring-green-100"
               />
             </div>
 
             {/* Error */}
             {error && (
-              <p
-                role="alert"
-                className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600"
-              >
+              <p role="alert" className="text-sm text-red-600">
                 {error}
               </p>
             )}
@@ -150,10 +121,9 @@ export default function SignInPage() {
             {/* Submit */}
             <button
               type="submit"
-              disabled={isLoading}
-              className="w-full rounded-lg bg-[#078b42] px-4 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[#067536] focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-lg bg-[#078b42] px-4 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[#067536] focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 active:scale-[0.99]"
             >
-              {isLoading ? "সাইন ইন হচ্ছে..." : "সাইন ইন"}
+              সাইন ইন
             </button>
           </form>
 
@@ -165,14 +135,13 @@ export default function SignInPage() {
           </div>
 
           {/* Social Login */}
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-            {/* Google */}
+          <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
-              disabled={isLoading}
-              onClick={() => handleSocialSignIn("google")}
-              className="flex items-center justify-center gap-2 rounded-lg border border-gray-200 px-2 py-2.5 text-xs font-medium text-gray-700 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-200 disabled:cursor-not-allowed disabled:opacity-60"
+              onClick={handleGoogleSignIn}
+              className="flex items-center justify-center gap-1.5 rounded-lg border border-gray-200 px-2 py-2.5 text-xs font-medium text-gray-700 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-200"
             >
+              {/* Google Icon */}
               <svg
                 viewBox="0 0 48 48"
                 aria-hidden="true"
@@ -203,13 +172,12 @@ export default function SignInPage() {
               <span>Google দিয়ে চালিয়ে যান</span>
             </button>
 
-            {/* GitHub */}
             <button
               type="button"
-              disabled={isLoading}
-              onClick={() => handleSocialSignIn("github")}
-              className="flex items-center justify-center gap-2 rounded-lg border border-gray-200 px-2 py-2.5 text-xs font-medium text-gray-700 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-200 disabled:cursor-not-allowed disabled:opacity-60"
+
+              className="flex items-center justify-center gap-1.5 rounded-lg border border-gray-200 px-2 py-2.5 text-xs font-medium text-gray-700 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-200"
             >
+              {/* GitHub Icon */}
               <svg
                 viewBox="0 0 24 24"
                 aria-hidden="true"
