@@ -3,6 +3,7 @@ import { connection } from "next/server";
 import { Suspense } from "react";
 import Navlinks from "./Navlinks";
 import { SiCardmarket } from "react-icons/si";
+import UserSignInUpInfo from "./UserSignInUpInfo";
 
 // 1. Create a small async component that performs the dynamic work
 async function CurrentDate() {
@@ -46,21 +47,10 @@ const Header = () => {
                     </div>
                 </Link>
 
-                <nav className="flex items-center gap-4 sm:gap-6">
-                    <Link
-                        href="/sign-in"
-                        className="text-xs font-medium text-gray-700 hover:text-emerald-600 sm:text-sm"
-                    >
-                        সাইন ইন
-                    </Link>
+              {/* User Information related sign in and sign up */}
 
-                    <Link
-                        href="/sign-up"
-                        className="rounded-md bg-emerald-600 px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-emerald-700 sm:px-4 sm:text-sm"
-                    >
-                        সাইন আপ
-                    </Link>
-                </nav>
+              <UserSignInUpInfo></UserSignInUpInfo>
+            
             </div>
 
             {/* Navlinks */}

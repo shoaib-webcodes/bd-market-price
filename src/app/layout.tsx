@@ -3,6 +3,7 @@ import { Hind_Siliguri } from "next/font/google";
 import "./globals.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import { Toaster } from "react-hot-toast";
 
 const hindSiliguri = Hind_Siliguri({
   subsets: ["bengali", "latin"],
@@ -21,6 +22,31 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${hindSiliguri.className} h-full antialiased`}
     >
       <body className="mx-auto  h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <Toaster
+        position="top-center"
+        reverseOrder={false}
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: "#078b42",
+            color: "#fff",
+          },
+          success: {
+            duration: 3000,
+            iconTheme: {
+              primary: "#fff",
+              secondary: "#078b42",
+            },
+          },
+          error: {
+            duration: 4000,
+            style: {
+              background: "#dc2626",
+              color: "#fff",
+            },
+          },
+        }}
+      />
         {/* All pages will be included in children. Header or other component will be above the children and Footer will be below the children */}
         <Header></Header>
         {children}

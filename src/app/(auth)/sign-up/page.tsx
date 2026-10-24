@@ -4,7 +4,7 @@
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { authClient } from "../../../lib/auth-client";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";
 
 export default function SignUpPage() {
@@ -62,8 +62,7 @@ export default function SignUpPage() {
       }
 
       if (data) {
-        console.log("সাইন আপ সফল হয়েছে:", data);
-
+       
         // Clear all form fields after successful signup
         form.reset();
 
@@ -85,31 +84,7 @@ export default function SignUpPage() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#f1f6f1] px-4 py-10">
-      <Toaster
-        position="top-center"
-        reverseOrder={false}
-        toastOptions={{
-          duration: 3000,
-          style: {
-            background: "#078b42",
-            color: "#fff",
-          },
-          success: {
-            duration: 3000,
-            iconTheme: {
-              primary: "#fff",
-              secondary: "#078b42",
-            },
-          },
-          error: {
-            duration: 4000,
-            style: {
-              background: "#dc2626",
-              color: "#fff",
-            },
-          },
-        }}
-      />
+      
 
       <div className="w-full max-w-100">
         {/* Heading */}
@@ -137,7 +112,7 @@ export default function SignUpPage() {
                 id="name"
                 name="name"
                 type="text"
-                placeholder="যেমন: রহিম উদ্দিন"
+                placeholder="আপনার নাম লিখুন "
                 autoComplete="name"
                 required
                 className="w-full rounded-md border border-[#e1e9e1] bg-transparent px-3 py-2 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-green-600 focus:ring-2 focus:ring-green-100"
@@ -156,7 +131,7 @@ export default function SignUpPage() {
                 id="email"
                 name="email"
                 type="email"
-                placeholder="Type your email address"
+                placeholder="আপনার ইমেইল অ্যাড্রেস লিখুন "
                 autoComplete="email"
                 required
                 className="w-full rounded-md border border-[#e1e9e1] bg-transparent px-3 py-2 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-green-600 focus:ring-2 focus:ring-green-100"
