@@ -45,12 +45,7 @@ export const Banner: React.FC<BannerProps> = ({
             {description}
           </p>
 
-          <button
-            onClick={onButtonClick}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-6 py-3 rounded-lg shadow-md transition-all duration-200 cursor-pointer"
-          >
-            {buttonText}
-          </button>
+          <a className="bg-emerald-500 hover:bg-violet-500 rounded-xl text-white font-bold px-5 py-3"  href="#all-products">আজকের দাম দেখুন</a>
         </div>
 
         <div className="flex-1 w-full flex justify-center lg:justify-end">

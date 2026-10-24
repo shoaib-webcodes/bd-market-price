@@ -220,7 +220,6 @@ export default function SignUpPage() {
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={loading}
               className="w-full rounded-md bg-[#078b42] px-4 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-[#067536] focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
             >
               {loading
@@ -241,7 +240,6 @@ export default function SignUpPage() {
             <button
               type="button"
               onClick={handleGoogleSignIn}
-              disabled={loading}
               className="flex items-center justify-center gap-1.5 rounded-md border border-gray-200 px-2 py-2 text-xs font-medium text-gray-700 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-200 disabled:opacity-50"
             >
               <FcGoogle className="h-4 w-4 shrink-0" />
