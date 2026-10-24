@@ -1,9 +1,11 @@
+
 "use client";
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { authClient } from "../../../lib/auth-client";
-
+import toast, { Toaster } from "react-hot-toast";
+import { FcGoogle } from "react-icons/fc";
 
 export default function SignUpPage() {
   const [error, setError] = useState("");
@@ -11,11 +13,15 @@ export default function SignUpPage() {
 
   const handleSignUp = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Keep the form reference before the async operation
+    const form = e.currentTarget;
+
     setError("");
 
-    const formData = new FormData(e.currentTarget);
+    const formData = new FormData(form);
     const userData = Object.fromEntries(formData.entries());
-    
+
     const { name, email, password, confirmPassword } = userData as {
       name: string;
       email: string;
@@ -23,7 +29,7 @@ export default function SignUpPage() {
       confirmPassword: string;
     };
 
-    // Password Validation
+    // Password validation
     if (password.length < 8) {
       setError("পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে।");
       return;
@@ -36,26 +42,42 @@ export default function SignUpPage() {
 
     try {
       setLoading(true);
-      
-      // Better Auth Client Call
-      const { data, error: authError } = await authClient.signUp.email({
-        email,
-        password,
-        name,
-      });
+
+      // Better Auth signup
+      const { data, error: authError } =
+        await authClient.signUp.email({
+          email,
+          password,
+          name,
+        });
+
+      if (authError) {
+        setError(
+          authError.message || "সাইন আপ করতে সমস্যা হয়েছে।"
+        );
+        toast.error(
+          authError.message || "সাইন আপ করতে সমস্যা হয়েছে।"
+        );
+        return;
+      }
 
       if (data) {
         console.log("সাইন আপ সফল হয়েছে:", data);
-        
-        
-      }
 
-      if (authError) {
-        setError(authError.message || "সাইন আপ করতে সমস্যা হয়েছে।");
+        // Clear all form fields after successful signup
+        form.reset();
+
+        // Clear any previous error
+        setError("");
+
+        // Show success notification
+        toast.success("User created successfully!");
       }
     } catch (err: unknown) {
+      console.error("Signup error:", err);
+
       setError("একটি অপ্রত্যাশিত ত্রুটি ঘটেছে।");
-      
+      toast.error("একটি অপ্রত্যাশিত ত্রুটি ঘটেছে।");
     } finally {
       setLoading(false);
     }
@@ -63,6 +85,32 @@ export default function SignUpPage() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#f1f6f1] px-4 py-10">
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: "#078b42",
+            color: "#fff",
+          },
+          success: {
+            duration: 3000,
+            iconTheme: {
+              primary: "#fff",
+              secondary: "#078b42",
+            },
+          },
+          error: {
+            duration: 4000,
+            style: {
+              background: "#dc2626",
+              color: "#fff",
+            },
+          },
+        }}
+      />
+
       <div className="w-full max-w-100">
         {/* Heading */}
         <div className="mb-5 text-center">
@@ -165,9 +213,11 @@ export default function SignUpPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-md bg-[#078b42] px-4 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-[#067536] focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 active:scale-[0.99] disabled:opacity-50"
+              className="w-full rounded-md bg-[#078b42] px-4 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-[#067536] focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {loading ? "অ্যাকাউন্ট তৈরি হচ্ছে..." : "অ্যাকাউন্ট তৈরি করুন"}
+              {loading
+                ? "অ্যাকাউন্ট তৈরি হচ্ছে..."
+                : "অ্যাকাউন্ট তৈরি করুন"}
             </button>
           </form>
 
@@ -182,16 +232,24 @@ export default function SignUpPage() {
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
-              onClick={() => setError("Google OAuth এখনো সংযুক্ত করা হয়নি।")}
+              onClick={() => {
+                setError("Google OAuth এখনো সংযুক্ত করা হয়নি।");
+                toast.error("Google OAuth এখনো সংযুক্ত করা হয়নি।");
+              }}
               className="flex items-center justify-center gap-1.5 rounded-md border border-gray-200 px-2 py-2 text-xs font-medium text-gray-700 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-200"
             >
-              <span className="text-base font-bold text-[#4285F4]">G</span>
+              <span className="text-base font-bold text-[#4285F4]">
+                <FcGoogle />
+              </span>
               Google দিয়ে চালিয়ে যান
             </button>
 
             <button
               type="button"
-              onClick={() => setError("GitHub OAuth এখনো সংযুক্ত করা হয়নি।")}
+              onClick={() => {
+                setError("GitHub OAuth এখনো সংযুক্ত করা হয়নি।");
+                toast.error("GitHub OAuth এখনো সংযুক্ত করা হয়নি।");
+              }}
               className="flex items-center justify-center gap-1.5 rounded-md border border-gray-200 px-2 py-2 text-xs font-medium text-gray-700 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-200"
             >
               <svg
