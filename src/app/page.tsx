@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import Marquee from "./components/Marquee";
+import { Banner } from "./components/Banner";
 
 
 export default function Home() {
@@ -8,6 +9,7 @@ export default function Home() {
       {/* Marquee component */}
       <Suspense fallback={<span className="loading loading-spinner text-primary"></span>}>
         <Marquee></Marquee>
+        <Banner></Banner>
       </Suspense>
 
     </div>
