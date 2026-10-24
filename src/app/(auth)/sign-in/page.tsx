@@ -3,25 +3,79 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
+import { authClient } from "../../../lib/auth-client";
+import toast from "react-hot-toast";
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(""); 
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-
-
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSignIn = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError("");
 
-    // Connect your authentication API here.
-    console.log({ email, password });
+    setError("");
+    setIsLoading(true);
+
+    try {
+      const { data, error } = await authClient.signIn.email({
+        email,
+        password,
+        callbackURL: "/",
+      });
+
+      if (error) {
+        const message =
+          error.message || "ইমেইল অথবা পাসওয়ার্ড সঠিক নয়।";
+
+        setError(message);
+        toast.error(message);
+        return;
+      }
+
+      if (data) {
+        setEmail("");
+        setPassword("");
+        toast.success("সফলভাবে সাইন ইন হয়েছে!");
+      }
+    } catch {
+      setError("কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+      toast.error("কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSocialSignIn = async (
+    provider: "google" | "github"
+  ) => {
+    setError("");
+    setIsLoading(true);
+
+    try {
+      const { error } = await authClient.signIn.social({
+        provider,
+        callbackURL: "/",
+      });
+
+      if (error) {
+        const message =
+          error.message || "সাইন ইন করা যায়নি। আবার চেষ্টা করুন।";
+
+        setError(message);
+        toast.error(message);
+        setIsLoading(false);
+      }
+    } catch {
+      setError("কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+      toast.error("কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+      setIsLoading(false);
+    }
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#f1f6f1] px-4 py-10">
+    <main className="flex min-h-screen justify-center bg-[#f1f6f1] px-4 py-10">
       <div className="w-full max-w-100">
         {/* Heading */}
         <header className="mb-6 text-center">
@@ -36,7 +90,7 @@ export default function SignInPage() {
 
         {/* Sign In Card */}
         <section className="rounded-2xl border border-gray-200/80 bg-white/75 p-5 shadow-sm sm:p-6">
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSignIn} className="space-y-4">
             {/* Email */}
             <div>
               <label
@@ -50,12 +104,13 @@ export default function SignInPage() {
                 id="email"
                 type="email"
                 name="email"
+                autoComplete="email"
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-            
                 required
-                className="w-full rounded-lg border border-[#dfe8df] bg-transparent px-3 py-2.5 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-green-600 focus:ring-2 focus:ring-green-100"
+                disabled={isLoading}
+                className="w-full rounded-lg border border-[#dfe8df] bg-transparent px-3 py-2.5 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-green-600 focus:ring-2 focus:ring-green-100 disabled:opacity-60"
               />
             </div>
 
@@ -72,18 +127,22 @@ export default function SignInPage() {
                 id="password"
                 type="password"
                 name="password"
-                placeholder="কমপক্ষে ৮ অক্ষর"
+                autoComplete="current-password"
+                placeholder="আপনার পাসওয়ার্ড লিখুন"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-               
                 required
-                className="w-full rounded-lg border border-[#dfe8df] bg-transparent px-3 py-2.5 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-green-600 focus:ring-2 focus:ring-green-100"
+                disabled={isLoading}
+                className="w-full rounded-lg border border-[#dfe8df] bg-transparent px-3 py-2.5 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-green-600 focus:ring-2 focus:ring-green-100 disabled:opacity-60"
               />
             </div>
 
             {/* Error */}
             {error && (
-              <p role="alert" className="text-sm text-red-600">
+              <p
+                role="alert"
+                className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600"
+              >
                 {error}
               </p>
             )}
@@ -91,9 +150,10 @@ export default function SignInPage() {
             {/* Submit */}
             <button
               type="submit"
-              className="w-full rounded-lg bg-[#078b42] px-4 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[#067536] focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 active:scale-[0.99]"
+              disabled={isLoading}
+              className="w-full rounded-lg bg-[#078b42] px-4 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[#067536] focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
             >
-              সাইন ইন
+              {isLoading ? "সাইন ইন হচ্ছে..." : "সাইন ইন"}
             </button>
           </form>
 
@@ -105,15 +165,14 @@ export default function SignInPage() {
           </div>
 
           {/* Social Login */}
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            {/* Google */}
             <button
               type="button"
-              onClick={() =>
-                setError("Google sign-in এখনো সংযুক্ত করা হয়নি।")
-              }
-              className="flex items-center justify-center gap-1.5 rounded-lg border border-gray-200 px-2 py-2.5 text-xs font-medium text-gray-700 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-200"
+              disabled={isLoading}
+              onClick={() => handleSocialSignIn("google")}
+              className="flex items-center justify-center gap-2 rounded-lg border border-gray-200 px-2 py-2.5 text-xs font-medium text-gray-700 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-200 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {/* Google Icon */}
               <svg
                 viewBox="0 0 48 48"
                 aria-hidden="true"
@@ -144,14 +203,13 @@ export default function SignInPage() {
               <span>Google দিয়ে চালিয়ে যান</span>
             </button>
 
+            {/* GitHub */}
             <button
               type="button"
-              onClick={() =>
-                setError("GitHub sign-in এখনো সংযুক্ত করা হয়নি।")
-              }
-              className="flex items-center justify-center gap-1.5 rounded-lg border border-gray-200 px-2 py-2.5 text-xs font-medium text-gray-700 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-200"
+              disabled={isLoading}
+              onClick={() => handleSocialSignIn("github")}
+              className="flex items-center justify-center gap-2 rounded-lg border border-gray-200 px-2 py-2.5 text-xs font-medium text-gray-700 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-200 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {/* GitHub Icon */}
               <svg
                 viewBox="0 0 24 24"
                 aria-hidden="true"
