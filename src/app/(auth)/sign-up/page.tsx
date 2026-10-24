@@ -95,6 +95,7 @@ export default function SignUpPage() {
   const handleGoogleSignIn = async () => {
     const data = await authClient.signIn.social({
       provider: "google",
+      callbackURL: "/",
     });
   
   }
@@ -102,6 +103,7 @@ export default function SignUpPage() {
   const handleGitHubSignIn = async () => {
     const data = await authClient.signIn.social({
       provider: "github",
+      callbackURL: "/",
     });
   
   }

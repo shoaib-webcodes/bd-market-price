@@ -46,6 +46,7 @@ export default function SignInPage() {
   const handleGoogleSignIn = async () => {
     const data = await authClient.signIn.social({
       provider: "google",
+      callbackURL: "/",
     });
   
   } 
@@ -54,6 +55,7 @@ export default function SignInPage() {
   const handleGitHubSignIn = async () => {
     const data = await authClient.signIn.social({
       provider: "github",
+      callbackURL: "/",
     });
   
   }
