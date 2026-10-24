@@ -48,6 +48,14 @@ export default function SignInPage() {
       provider: "google",
     });
   
+  } 
+
+  // GitHub Sign In
+  const handleGitHubSignIn = async () => {
+    const data = await authClient.signIn.social({
+      provider: "github",
+    });
+  
   }
 
   return (
@@ -174,6 +182,7 @@ export default function SignInPage() {
 
             <button
               type="button"
+              onClick={handleGitHubSignIn}
 
               className="flex items-center justify-center gap-1.5 rounded-lg border border-gray-200 px-2 py-2.5 text-xs font-medium text-gray-700 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-200"
             >

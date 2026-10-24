@@ -98,12 +98,13 @@ export default function SignUpPage() {
     });
   
   }
-
-  const handleGitHubSignUp = () => {
-    const message = "GitHub OAuth এখনো সংযুক্ত করা হয়নি।";
-    setError(message);
-    toast.error(message);
-  };
+// GitHub Sign In
+  const handleGitHubSignIn = async () => {
+    const data = await authClient.signIn.social({
+      provider: "github",
+    });
+  
+  }
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#f1f6f1] px-4 py-10">
@@ -247,7 +248,7 @@ export default function SignUpPage() {
 
             <button
               type="button"
-              onClick={handleGitHubSignUp}
+              onClick={handleGitHubSignIn}
               disabled={loading}
               className="flex items-center justify-center gap-1.5 rounded-md border border-gray-200 px-2 py-2 text-xs font-medium text-gray-700 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-200 disabled:opacity-50"
             >
