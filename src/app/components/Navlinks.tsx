@@ -16,7 +16,7 @@ const Navlinks = async () => {
 
             {
                 data.map((n, index: number) => (
-                    <Link key = {index} href={n.slug}  >
+                    <Link key = {index} href= {`/category/${n.slug}`}  >
                         {n.icon} &nbsp;
                         {n.nameBn}
                     </Link>

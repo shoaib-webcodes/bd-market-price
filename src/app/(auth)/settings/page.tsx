@@ -1,7 +1,6 @@
 
 
 
-
 const SettingsPage = () => {
     return (
         <div>
