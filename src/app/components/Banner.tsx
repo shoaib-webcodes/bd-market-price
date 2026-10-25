@@ -24,7 +24,7 @@ export const Banner: React.FC<BannerProps> = ({
   const heroImage = imageUrl ?? imageURL;
 
   return (
-    <section className="w-full bg-[#f4fbf7] py-12 px-4 sm:px-6 lg:px-8">
+    <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 bg-[#f4fbf7] py-12 ">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12">
         <div className="flex-1 space-y-6 text-left">
           <div className="inline-flex items-center gap-2 bg-[#e2f8ec] px-3 py-1.5 rounded-full">

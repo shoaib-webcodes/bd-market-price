@@ -21,7 +21,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${hindSiliguri.className} h-full antialiased`}
     >
-      <body className="mx-auto  h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <body className=" bg-violet-50  ">
         <Toaster
         position="top-center"
         reverseOrder={false}

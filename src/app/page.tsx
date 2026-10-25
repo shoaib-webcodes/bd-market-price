@@ -1,19 +1,21 @@
+
 import { Suspense } from "react";
 import Marquee from "./components/Marquee";
 import { Banner } from "./components/Banner";
 import Products from "./components/Products";
 
-
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className=" bg-green-50">
-      {/* Marquee component */}
-      <Suspense fallback={<span className="loading loading-spinner text-primary"></span>}>
-        <Marquee></Marquee>
-        <Banner></Banner>
-        <Products></Products>
+    <div>
+      <Suspense
+        fallback={
+          <span className="loading loading-spinner text-primary" />
+        }
+      >
+        <Marquee />
+        <Banner />
+        <Products />
       </Suspense>
-
     </div>
   );
 }
