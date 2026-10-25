@@ -2,7 +2,6 @@ import Link from "next/link";
 import { connection } from "next/server";
 import { Suspense } from "react";
 import Navlinks from "./Navlinks";
-import { SiCardmarket } from "react-icons/si";
 import UserSignInUpInfo from "./UserSignInUpInfo";
 
 // 1. Create a small async component that performs the dynamic work
@@ -22,9 +21,9 @@ const Header = () => {
         <header className=" max-w-6xl mx-auto items-center justify-between px-4 sm:px-6 lg:px-8 border-b border-gray-200  pt-5 ">
             <div className="mx-auto flex h-14 max-w-7xl items-center justify-between ">
                 <Link href="/" className="flex items-center gap-2.5">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-white text-lg p-3">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-emerald-600 text-white text-lg p-3">
                         
-                          BD
+                          বিডি 
                 
                     </div>
 
