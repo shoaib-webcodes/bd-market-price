@@ -46,7 +46,7 @@ function ProductDetailsFallback() {
       <div className="mx-auto max-w-6xl space-y-8 px-4 py-6 md:py-8">
         <div className="h-5 w-48 animate-pulse rounded bg-slate-200" />
 
-        <section className="flex flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:flex-row md:items-center md:justify-between md:p-8">
+        <section className="flex flex-col justify-between gap-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:flex-row md:items-center md:p-8">
           <div className="flex items-center gap-5">
             <div className="h-20 w-20 animate-pulse rounded-2xl bg-slate-200" />
             <div className="space-y-3">
@@ -55,46 +55,31 @@ function ProductDetailsFallback() {
               <div className="h-4 w-48 animate-pulse rounded bg-slate-200" />
             </div>
           </div>
-
           <div className="h-32 w-full animate-pulse rounded-2xl bg-slate-100 md:w-40" />
         </section>
 
-        <section className="space-y-4">
-          <div className="h-7 w-48 animate-pulse rounded bg-slate-200" />
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            {Array.from({ length: 3 }).map((_, index) => (
-              <div
-                key={index}
-                className="h-32 animate-pulse rounded-2xl border border-slate-200 bg-white"
-              />
-            ))}
-          </div>
-        </section>
+        <div className="h-7 w-48 animate-pulse rounded bg-slate-200" />
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div
+              key={i}
+              className="h-32 animate-pulse rounded-2xl border border-slate-200 bg-white"
+            />
+          ))}
+        </div>
 
-        <section className="space-y-4">
-          <div className="h-7 w-56 animate-pulse rounded bg-slate-200" />
-          <div className="h-32 animate-pulse rounded-2xl bg-white" />
-        </section>
-
-        <section className="space-y-4">
-          <div className="h-7 w-56 animate-pulse rounded bg-slate-200" />
-          <div className="h-64 animate-pulse rounded-2xl bg-white" />
-        </section>
+        <div className="h-64 animate-pulse rounded-2xl bg-white" />
       </div>
     </main>
   );
 }
 
-async function ProductDetails({
-  params,
-}: PageProps) {
+async function ProductDetails({ params }: PageProps) {
   const { productId } = await params;
 
   const res = await fetch(
     `https://api.abcz.workers.dev/api/bazardor/products/${encodeURIComponent(productId)}`,
-    {
-      cache: "no-store",
-    }
+    { cache: "no-store" }
   );
 
   if (res.status === 404) {
@@ -103,7 +88,6 @@ async function ProductDetails({
         <h1 className="text-2xl font-bold">
           পণ্যটি পাওয়া যায়নি
         </h1>
-
         <Link
           href="/"
           className="mt-4 inline-block text-emerald-600"
@@ -115,9 +99,7 @@ async function ProductDetails({
   }
 
   if (!res.ok) {
-    throw new Error(
-      `Failed to fetch product details: ${res.status}`
-    );
+    throw new Error(`Failed to fetch product: ${res.status}`);
   }
 
   const product: ProductI = await res.json();
@@ -139,8 +121,7 @@ async function ProductDetails({
       ) / markets.length
     : product.today;
 
-  const priceDifference =
-    product.today - product.yesterday;
+  const priceDifference = product.today - product.yesterday;
 
   const priceDirection =
     priceDifference > 0
@@ -162,18 +143,14 @@ async function ProductDetails({
           <Link href="/" className="hover:text-emerald-600">
             হোম
           </Link>
-
           <span>›</span>
-
           <Link
             href={`/category/${product.category}`}
             className="hover:text-emerald-600"
           >
             {product.categoryNameBn}
           </Link>
-
           <span>›</span>
-
           <span className="font-medium text-slate-800">
             {product.nameBn}
           </span>
@@ -190,11 +167,9 @@ async function ProductDetails({
               <h1 className="text-2xl font-bold text-slate-900 md:text-3xl">
                 {product.nameBn}
               </h1>
-
               <p className="mt-2 text-sm text-slate-500">
                 প্রতি {product.unit} · {product.categoryNameBn}
               </p>
-
               <p className="mt-3 text-sm">
                 {priceDirection === "up" ? (
                   <span className="text-red-500">
@@ -215,20 +190,14 @@ async function ProductDetails({
             </div>
           </div>
 
-          {/* Today's Price */}
           <div className="w-full rounded-2xl border border-slate-100 bg-slate-50 p-5 text-center md:w-40 md:shrink-0">
-            <p className="text-sm text-slate-500">
-              আজকের দাম
-            </p>
-
+            <p className="text-sm text-slate-500">আজকের দাম</p>
             <p className="mt-1 text-3xl font-bold text-slate-900">
               {money(product.today)}
             </p>
-
             <p className="text-xs text-slate-500">
               টাকা / {product.unit}
             </p>
-
             <span
               className={`mt-3 inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
                 priceDirection === "up"
@@ -253,12 +222,9 @@ async function ProductDetails({
           <h2 className="text-xl font-bold text-slate-900 md:text-2xl">
             দামের সারসংক্ষেপ
           </h2>
-
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-              <p className="text-sm text-slate-500">
-                সর্বনিম্ন দাম
-              </p>
+              <p className="text-sm text-slate-500">সর্বনিম্ন দাম</p>
               <p className="mt-2 text-3xl font-bold text-emerald-500">
                 {money(lowestPrice)} টাকা
               </p>
@@ -268,9 +234,7 @@ async function ProductDetails({
             </div>
 
             <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-              <p className="text-sm text-slate-500">
-                গড় দাম
-              </p>
+              <p className="text-sm text-slate-500">গড় দাম</p>
               <p className="mt-2 text-3xl font-bold text-blue-500">
                 {money(averagePrice)} টাকা
               </p>
@@ -280,9 +244,7 @@ async function ProductDetails({
             </div>
 
             <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-              <p className="text-sm text-slate-500">
-                সর্বোচ্চ দাম
-              </p>
+              <p className="text-sm text-slate-500">সর্বোচ্চ দাম</p>
               <p className="mt-2 text-3xl font-bold text-red-500">
                 {money(highestPrice)} টাকা
               </p>
@@ -298,7 +260,6 @@ async function ProductDetails({
           <h2 className="text-xl font-bold text-slate-900 md:text-2xl">
             আগের দিনের দামের তুলনা
           </h2>
-
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             {[
               { label: "আজকের দাম", value: product.today },
@@ -310,9 +271,7 @@ async function ProductDetails({
                 key={item.label}
                 className="rounded-xl border border-slate-200 bg-white p-4"
               >
-                <p className="text-sm text-slate-500">
-                  {item.label}
-                </p>
+                <p className="text-sm text-slate-500">{item.label}</p>
                 <p className="mt-2 text-xl font-bold text-slate-800">
                   {money(item.value)} টাকা
                 </p>
@@ -335,7 +294,6 @@ async function ProductDetails({
                 বিভিন্ন বাজারের সর্বনিম্ন ও সর্বোচ্চ মূল্য
               </p>
             </div>
-
             <span className="text-sm text-slate-500">
               মোট বাজার: {money(markets.length)}
             </span>
@@ -352,7 +310,6 @@ async function ProductDetails({
                   <th className="px-5 py-4 font-semibold">গড়</th>
                 </tr>
               </thead>
-
               <tbody className="divide-y divide-slate-100">
                 {markets.map((market, index) => (
                   <tr
@@ -398,7 +355,6 @@ async function ProductDetails({
           </p>
         </section>
 
-        {/* Back Button */}
         <div className="pb-6">
           <Link
             href="/"
